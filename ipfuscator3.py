@@ -20,12 +20,14 @@ def banner():
 	print("IPFuscator")
 	print("Author: Vincent Yiu (@vysecurity)")
 	print("https://www.github.com/vysec/IPFuscator")
+	print("Modded for Python3 (@nu11secur1ty)")
+	print("https://github.com/nu11secur1ty/IPFuscator")
 	print("Version: {}".format(__version__))
 	print ("")
 
 def checkIP(ip):
 	m = re.match('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\Z',ip)
-	
+
 	if m:
 		# Valid IP format
 		parts = ip.split('.')
