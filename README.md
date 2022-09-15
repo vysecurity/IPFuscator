@@ -54,7 +54,7 @@ Random base with random padding:
 
 ## IPFuscator3
 
-![](https://github.com/nu11secur1ty/IPFuscator/blob/master/docs/Screenshot%202022-09-15%20171059.png)
+![](https://github.com/nu11secur1ty/IPFuscator/blob/master/docs/Screenshot%202022-09-15%20171819.png)
 
 ```
 IPFuscator3
