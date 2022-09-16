@@ -14,7 +14,7 @@ IPFuscation is a technique that allows for IP addresses to be represented in hex
 ## Usage
 
 1) `git clone https://github.com/vysec/ipfuscator`
-2) `python ipfuscator.py 127.0.0.1`
+2) `python ipfuscator.py 127.0.0.1` or `python3 ipfuscator3.py 127.0.0.1` 
 
 ```
 IPFuscator
