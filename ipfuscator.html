@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IPFuscator</title>
+    <link href="https://fonts.googleapis.com/css?family=Orbitron&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background-color: #000;
+            color: #00ff00;
+            margin: 0;
+            padding: 0;
+        }
+
+        a {
+            color: #00ff00;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: #ff00ff; /* Add a different color on hover */
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 0 80px;
+        }
+
+        h1 {
+            color: #00ff00;
+            text-align: center;
+            margin-top: 0;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        h2 {
+            color: #00ff00;
+            margin-top: 30px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        p {
+            color: #00ff00;
+            margin: 0;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            color: #00ff00;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            background-color: #000;
+            color: #00ff00;
+            transition: border 0.3s ease-out;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+
+        input[type="text"]::placeholder {
+            color: #008000;
+        }
+
+        input[type="text"]:focus {
+            border-color: #00ff00;
+        }
+
+        button {
+            display: inline-block;  /* Required for margin top to work */
+            margin-top: 10px;  /* Add space above button */
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #00ff00;
+            color: #000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            transform: translate3d(0, 0, 0);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        button:after {
+            content: "";
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle, #00ff00 10%, transparent 10.01%);
+            background-repeat: no-repeat;
+            background-position: 50%;
+            transform: scale(10,10);
+            opacity: 0;
+            transition: transform .5s, opacity 1s;
+        }
+
+        button:active:after {
+            transform: scale(0,0);
+            opacity: .3;
+            transition: 0s;
+        }
+
+        button:hover {
+            background-color: #008000;
+        }
+
+        .output {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #000;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            overflow: auto;  /* Add this line. It will add a scrollbar if the content overflows */
+            width: 100%;  /* Add a width property */
+            max-height: 500px;   /* You can adjust the value to your preference */
+            font-family: 'Courier New', monospace;
+        }
+
+        .error {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        h1 {
+            color: #00ff00;
+            text-align: center;
+            margin-top: 0;
+            font-size: 36px;
+            font-weight: bold;
+            text-transform: uppercase;
+
+            /* Add these lines for the animation */
+            overflow: hidden;   
+            border-right: .15em solid #00ff00;  
+            white-space: nowrap;  
+            animation: typing 4s steps(30, end),
+                        blink-caret .5s step-end infinite;
+        }
+
+        /* Keyframes for the typing effect */
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        /* Keyframes for the blinking caret */
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00ff00; }
+        }
+
+    </style>
+    <script>
+        function calculateIPFuscation() {
+            var ip = document.getElementById("ipInput").value;
+            var outputDiv = document.getElementById("outputDiv");
+
+            if (checkIP(ip)) {
+                outputDiv.innerHTML = "";
+
+                var parts = ip.split('.');
+                var decimal = parseInt(parts[0]) * 16777216 + parseInt(parts[1]) * 65536 + parseInt(parts[2]) * 256 + parseInt(parts[3]);
+
+                var decimalOutput = document.createElement("p");
+                decimalOutput.innerHTML = "<b>Decimal:</b> " + decimal;
+                outputDiv.appendChild(decimalOutput);
+
+                var hexadecimalOutput = document.createElement("p");
+                hexadecimalOutput.innerHTML = "<b>Hexadecimal:</b> " + decimal.toString(16);
+                outputDiv.appendChild(hexadecimalOutput);
+
+                var octalOutput = document.createElement("p");
+                octalOutput.innerHTML = "<b>Octal:</b> 0" + decimal.toString(8);
+                outputDiv.appendChild(octalOutput);
+
+                var fullHexOutput = document.createElement("p");
+                fullHexOutput.innerHTML = "<hr><b>Full Hex:</b> " + parts.map(function(part) { return "0x" + parseInt(part).toString(16); }).join(".");
+                outputDiv.appendChild(fullHexOutput);
+
+                var fullOctOutput = document.createElement("p");
+                fullOctOutput.innerHTML = "<b>Full Oct:</b> " + parts.map(function(part) { return "0" + parseInt(part).toString(8); }).join(".");
+                outputDiv.appendChild(fullOctOutput);
+
+                var randomPaddingOutput = document.createElement("p");
+                randomPaddingOutput.innerHTML = "<hr><b>Random Padding:</b> ";
+                outputDiv.appendChild(randomPaddingOutput);
+
+                var randHex = "";
+                for (var i = 0; i < parts.length; i++) {
+                    randHex += "0x" + parseInt(parts[i]).toString(16) + "0".repeat(Math.floor(Math.random() * 30)) + ".";
+                }
+                randHex = randHex.slice(0, -1);
+
+                var hexOutput = document.createElement("p");
+                hexOutput.innerHTML = "<b>Hex: </b>" + randHex;
+                outputDiv.appendChild(hexOutput);
+
+                var randOct = "";
+                for (var i = 0; i < parts.length; i++) {
+                    randOct += "0".repeat(Math.floor(Math.random() * 30)) + parseInt(parts[i]).toString(8) + ".";
+                }
+                randOct = randOct.slice(0, -1);
+
+                var octOutput = document.createElement("p");
+                octOutput.innerHTML = "<b>Oct: </b>" + randOct;
+                outputDiv.appendChild(octOutput);
+
+                var randomBaseOutput = document.createElement("p");
+                randomBaseOutput.innerHTML = "<hr><b>Random base:</b>";
+                outputDiv.appendChild(randomBaseOutput);
+
+                for (var count = 0; count < 5; count++) {
+                    var randBaseVal = "";
+                    for (var i = 0; i < parts.length; i++) {
+                        var val = Math.floor(Math.random() * 3);
+                        if (val === 0) {
+                            randBaseVal += parts[i] + ".";
+                        } else if (val === 1) {
+                            randBaseVal += "0x" + parseInt(parts[i]).toString(16) + ".";
+                        } else {
+                            randBaseVal += "0" + parseInt(parts[i]).toString(8) + ".";
+                        }
+                    }
+                    randBaseVal = randBaseVal.slice(0, -1);
+
+                    var randBaseOutput = document.createElement("p");
+                    randBaseOutput.innerHTML = "<b>#" + (count + 1) + ":</b> " + randBaseVal;
+                    outputDiv.appendChild(randBaseOutput);
+                }
+
+                var randomBasePaddingOutput = document.createElement("p");
+                randomBasePaddingOutput.innerHTML = "<hr><b>Random base with random padding:</b>";
+                outputDiv.appendChild(randomBasePaddingOutput);
+
+                for (var count = 0; count < 5; count++) {
+                    var randBaseVal = "";
+                    for (var i = 0; i < parts.length; i++) {
+                        var val = Math.floor(Math.random() * 3);
+                        if (val === 0) {
+                            randBaseVal += parts[i] + ".";
+                        } else if (val === 1) {
+                            randBaseVal += "0x" + parseInt(parts[i]).toString(16) + "0".repeat(Math.floor(Math.random() * 30)) + ".";
+                        } else {
+                            randBaseVal += "0".repeat(Math.floor(Math.random() * 30)) + parseInt(parts[i]).toString(8) + ".";
+                        }
+                    }
+                    randBaseVal = randBaseVal.slice(0, -1);
+
+                    var randBaseOutput = document.createElement("p");
+                    randBaseOutput.innerHTML = "<b>#" + (count + 1) + ": </b>" + randBaseVal;
+                    outputDiv.appendChild(randBaseOutput);
+                }
+            } else {
+                outputDiv.innerHTML = "<p class='error'>[!] Invalid IP format: " + ip + "</p>";
+            }
+        }
+
+        function checkIP(ip) {
+            var ipRegex = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/;
+            if (ipRegex.test(ip)) {
+                var parts = ip.split('.');
+                for (var i = 0; i < parts.length; i++) {
+                    var num = parseInt(parts[i]);
+                    if (num < 0 || num > 255) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            return false;
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>IPFuscator</h1>
+        <p>Author: <a href="https://x.com/vysecurity">Vincent Yiu (@vysecurity)</a></p>
+        <p>Version: 1.0.0 RELEASE</p>
+        <p>Repository: <a href="https://github.com/vysecurity/ipfuscator">https://github.com/vysecurity/ipfuscator</a></p>
+        <hr>
+        <h2>IPFuscation</h2>
+        <label for="ipInput">Enter IP Address:</label>
+        <input type="text" id="ipInput" value="127.0.0.1">  <!-- Set default value of input -->
+        <button onclick="calculateIPFuscation()">IPFuscate!</button>
+        <div id="outputDiv" class="output"></div>
+    </div>
+</body>
+</html>
