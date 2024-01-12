@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from argparse import ArgumentParser
-import struct
 import re, random
 
 
@@ -14,119 +13,77 @@ def get_args():
 	parser.add_argument('-o', '--output', help='Output file')
 	return parser.parse_args()
 
+
 def banner():
-	print "IPFuscator"
-	print "Author: Vincent Yiu (@vysecurity)"
-	print "https://www.github.com/vysec/IPFuscator"
-	print "Version: {}".format(__version__)
-	print ""
+	print("IPFuscator")
+	print("Author: Vincent Yiu (@vysecurity)")
+	print("https://www.github.com/vysec/IPFuscator")
+	print("Version: {}".format(__version__))
+	print("")
 
-def checkIP(ip):
-	m = re.match('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\Z',ip)
-	
+
+def check_ip(ip):
+	m = re.fullmatch('\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', ip)
+
 	if m:
-		# Valid IP format
 		parts = ip.split('.')
-		if len(parts) == 4:
-			# Valid IP
-			for i in parts:
-					if int(i) > 255 or int(i) < 0:
-						return False
+		if len(parts) == 4 and all(0 <= int(p) <= 255 for p in parts):
 			return True
-		else:
-			 return False
-	else:
-		return False
+	return False
 
-def printOutput(ip):
+
+def print_output(ip):
 	parts = ip.split('.')
 
 	decimal = int(parts[0]) * 16777216 + int(parts[1]) * 65536 + int(parts[2]) * 256 + int(parts[3])
-	print ""
+	print("\nDecimal:\t{}".format(decimal))
+	print("Hexadecimal:\t{}".format(hex(decimal)))
+	print("Octal:\t\t{}".format(oct(decimal)))
 
-	print "Decimal:\t{}".format(decimal)
-	#hexadecimal = "0x%02X%02X%02X%02X" % (int(parts[0]), int(parts[1]), int(parts[2]), int(parts[3]))
-	print "Hexadecimal:\t{}".format(hex(decimal))
+	hexparts = [hex(int(i)) for i in parts]
+	octparts = [oct(int(i)) for i in parts]
 
-	#octal = oct(decimal)
-	print "Octal:\t\t{}".format(oct(decimal))
+	print ("\nFull Hex:\t{}".format('.'.join(hexparts)))
+	print ("Full Oct:\t{}".format('.'.join(octparts)))
 
-	print ""
+	print ("\nRandom Padding: ")
 
-	hexparts = []
-	octparts = []
+	randhex = '.'.join([i.replace('0x','0x' + '0' * random.randint(1,30)) for i in hexparts])
+	print ("Hex:\t{}".format(randhex))
 
-	for i in parts:
-		hexparts.append(hex(int(i)))
-		octparts.append(oct(int(i)))
+	randoct = '.'.join(['0' * random.randint(1,30) + i for i in octparts])
+	print ("Oct:\t{}".format(randoct))
 
-	print "Full Hex:\t{}".format('.'.join(hexparts))
-	print "Full Oct:\t{}".format('.'.join(octparts))
-
-	print ""
-	print "Random Padding: "
-
-	randhex = ""
-
-	for i in hexparts:
-		randhex += i.replace('0x','0x' + '0' * random.randint(1,30)) + '.'
-
-	randhex = randhex[:-1]
-	print "Hex:\t{}".format(randhex)
-
-	randoct = ""
-	for i in octparts:
-		randoct += '0' * random.randint(1,30) + i + '.'
-
-	randoct = randoct[:-1]
-
-	print "Oct:\t{}".format(randoct)
-
-	print ""
-	print "Random base:"
+	print ("\nRandom base:")
 
 	randbase = []
+	for _ in range(5):
+		randbaseval = []
+		for i in range(4):
+			choices = [parts[i], hexparts[i], octparts[i]]
+			randbaseval.append(random.choice(choices))
+		randbase.append('.'.join(randbaseval))
 
-	count = 0
-	while count < 5:
-		randbaseval = ""
-		for i in range(0,4):
-			val = random.randint(0,2)
-			if val == 0:
-				# dec
-				randbaseval += parts[i] + '.'
-			elif val == 1:
-				# hex
-				randbaseval += hexparts[i] + '.'
-			else:
-				randbaseval += octparts[i] + '.'
-				# oct
-		randbase.append(randbaseval[:-1])
-		print "#{}:\t{}".format(count+1, randbase[count])
-		count += 1
+	for i, base in enumerate(randbase):
+		print("#{}:\t{}".format(i+1, base))
 
-	print ""
-	print "Random base with random padding:"
+	print ("\nRandom base with random padding:")
 
 	randbase = []
-
-	count = 0
-	while count < 5:
-		randbaseval = ""
-		for i in range(0,4):
-			val = random.randint(0,2)
+	for _ in range(5):
+		randbaseval = []
+		for i in range(4):
+			val = random.choice([0, 1, 2])
 			if val == 0:
-				# dec
-				randbaseval += parts[i] + '.'
+				randbaseval.append(parts[i])
 			elif val == 1:
-				# hex
-				randbaseval += hexparts[i].replace('0x', '0x' + '0' * random.randint(1,30)) + '.'
+				randbaseval.append(hexparts[i].replace('0x', '0x' + '0' * random.randint(1,30)))
 			else:
-				randbaseval += '0' * random.randint(1,30) + octparts[i] + '.'
-				# oct
-		randbase.append(randbaseval[:-1])
-		print "#{}:\t{}".format(count+1, randbase[count])
-		count += 1
+				randbaseval.append('0' * random.randint(1,30) + octparts[i])
+		randbase.append('.'.join(randbaseval))
+
+	for i, base in enumerate(randbase):
+		print("#{}:\t{}".format(i+1, base))
 
 
 def main():
@@ -134,11 +91,11 @@ def main():
 
 	args = get_args()
 
-	if checkIP(args.ip):
-		print "IP Address:\t{}".format(args.ip)
-		printOutput(args.ip)
+	if check_ip(args.ip):
+		print("IP Address:\t{}".format(args.ip))
+		print_output(args.ip)
 	else:
-		print "[!] Invalid IP format: {}".format(args.ip)
+		print("[!] Invalid IP format: {}".format(args.ip))
 
 
 if __name__ == '__main__':
