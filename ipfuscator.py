@@ -4,7 +4,7 @@ from argparse import ArgumentParser
 import re, random
 
 
-__version__ = '0.1.0'
+__version__ = '1.0.0'
 
 
 def get_args():
