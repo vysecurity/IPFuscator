@@ -10,7 +10,6 @@ __version__ = '1.0.0'
 def get_args():
 	parser = ArgumentParser()
 	parser.add_argument('ip', help='The IP to perform IPFuscation on')
-	parser.add_argument('-o', '--output', help='Output file')
 	return parser.parse_args()
 
 
