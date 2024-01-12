@@ -17,7 +17,7 @@ def get_args():
 def banner():
 	print("IPFuscator")
 	print("Author: Vincent Yiu (@vysecurity)")
-	print("https://www.github.com/vysec/IPFuscator")
+	print("https://www.github.com/vysecurity/IPFuscator")
 	print("Version: {}".format(__version__))
 	print("")
 
