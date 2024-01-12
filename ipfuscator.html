@@ -188,7 +188,7 @@
                 outputDiv.appendChild(decimalOutput);
 
                 var hexadecimalOutput = document.createElement("p");
-                hexadecimalOutput.innerHTML = "<b>Hexadecimal:</b> " + decimal.toString(16);
+                hexadecimalOutput.innerHTML = "<b>Hexadecimal:</b> 0x" + decimal.toString(16);
                 outputDiv.appendChild(hexadecimalOutput);
 
                 var octalOutput = document.createElement("p");
@@ -209,7 +209,7 @@
 
                 var randHex = "";
                 for (var i = 0; i < parts.length; i++) {
-                    randHex += "0x" + parseInt(parts[i]).toString(16) + "0".repeat(Math.floor(Math.random() * 30)) + ".";
+                    randHex += "0x" +  "0".repeat(Math.floor(Math.random() * 30)) + parseInt(parts[i]).toString(16) + ".";
                 }
                 randHex = randHex.slice(0, -1);
 
@@ -261,7 +261,7 @@
                         if (val === 0) {
                             randBaseVal += parts[i] + ".";
                         } else if (val === 1) {
-                            randBaseVal += "0x" + parseInt(parts[i]).toString(16) + "0".repeat(Math.floor(Math.random() * 30)) + ".";
+                            randBaseVal += "0x" + "0".repeat(Math.floor(Math.random() * 30)) + parseInt(parts[i]).toString(16) + ".";
                         } else {
                             randBaseVal += "0".repeat(Math.floor(Math.random() * 30)) + parseInt(parts[i]).toString(8) + ".";
                         }
